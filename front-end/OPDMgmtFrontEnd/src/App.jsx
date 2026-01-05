@@ -9,6 +9,7 @@ import PatientHomepage from './components/Patient/PatientHomepage'
 import OpdHomepage from './pages/OpdHomepage'
 import BillingHomepage from './pages/BillingHomepage'
 import TreatementHomepage from './components/treatment/TreatementHomepage'
+import HospitalDetailsPage from './components/hospital/HospitalDetailsPage'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Homepage />} />
           <Route path="hospitals" element={<HospitalHomePage />} />
+          <Route path="/hospitals/:id" element={<HospitalDetailsPage />} />
           <Route path='doctors' element={<DoctorHomepage />} />
           <Route path='patients' element={<PatientHomepage />} />
           <Route path='opds' element={<OpdHomepage />} />
