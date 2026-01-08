@@ -22,7 +22,6 @@ function HospitalHomePage() {
 
     return (
         <>
-            {/* 🔹 Top Bar */}
             <div className="hospital-top-bar">
                 <input
                     type="text"
@@ -37,7 +36,6 @@ function HospitalHomePage() {
                 </button>
             </div>
 
-            {/* 🔹 Hospital Cards */}
             {filteredHospitals.map((hosp) => (
                 <div
                     className="hospital-card clickable"

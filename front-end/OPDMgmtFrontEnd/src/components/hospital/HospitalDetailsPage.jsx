@@ -23,14 +23,14 @@ function HospitalDetailsPage() {
             });
     }, [id]);
 
-    if (loading) {
-        return (
-            <div className="loader-container">
-                <div className="loader"></div>
-                <p>Loading hospital details...</p>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="loader-container">
+    //             <div className="loader"></div>
+    //             <p>Loading hospital details...</p>
+    //         </div>
+    //     );
+    // }
 
     if (!hospital) return null;
 
