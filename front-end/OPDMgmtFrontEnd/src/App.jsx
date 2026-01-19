@@ -1,33 +1,76 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Layout from './Layout'
-
-import HospitalHomePage from './components/hospital/HospitalHomePage'
-import Homepage from './pages/homepage'
-import DoctorHomepage from './components/doctor/DoctorsHomepage'
-import PatientHomepage from './components/Patient/PatientHomepage'
-import OpdHomepage from './pages/OpdHomepage'
-import BillingHomepage from './pages/BillingHomepage'
-import TreatementHomepage from './components/treatment/TreatementHomepage'
-import HospitalDetailsPage from './components/hospital/HospitalDetailsPage'
+import { Routes, Route } from "react-router-dom";
+import Login from "./auth/Login";
+import Signup from "./auth/Signup";
+import PublicLayout from "./layout/PublicLayout";
+import AuthLayout from "./layout/AuthLayout";
+import Intro from "./pages/Intro";
+import AdminDashboard from "./roles/admin/AdminDashboard"
+import DoctorDashboard from "./roles/doctor/DoctorDashboard"
+import ReceptionistDashboard from "./roles/receptionist/ReceptionistDashboard"
+import ProtectedRoute from "./auth/ProtectedRoute";
+import PatientDashboard from "./roles/patient/PatientDashboard";
+import MainLayout from "./layout/MainLayout"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Homepage />} />
-          <Route path="hospitals" element={<HospitalHomePage />} />
-          <Route path="/hospitals/:id" element={<HospitalDetailsPage />} />
-          <Route path='doctors' element={<DoctorHomepage />} />
-          <Route path='patients' element={<PatientHomepage />} />
-          <Route path='opds' element={<OpdHomepage />} />
-          <Route path='billing' element={<BillingHomepage />} />
-          <Route path='treatement' element={<TreatementHomepage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  )
+    <Routes>
+
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Intro />} />
+      </Route>
+
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Route>
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<AdminDashboard />} />
+      </Route>
+
+      <Route
+        path="/doctor"
+        element={
+          <ProtectedRoute role="DOCTOR">
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DoctorDashboard />} />
+      </Route>
+
+      <Route
+        path="/receptionist"
+        element={
+          <ProtectedRoute role="RECEPTIONIST">
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<ReceptionistDashboard />} />
+      </Route>
+
+      <Route
+        path="/patient"
+        element={
+          <ProtectedRoute role="PATIENT">
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<PatientDashboard />} />
+      </Route>
+
+
+    </Routes>
+  );
 }
 
-export default App
+export default App;
