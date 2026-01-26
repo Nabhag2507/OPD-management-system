@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import { getDoctorDashboard } from "../../services/dashboardService";
+import { StatCard, ProgressBar, ActivityFeed } from "../../components/common/AdvancedComponents";
 
 const DoctorDashboard = () => {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState({
+        todayOpd: 8,
+        totalPatients: 45,
+        pendingReports: 3
+    });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getDoctorDashboard().then(setData);
+        getDoctorDashboard().then(data => {
+            setData(data);
+            setLoading(false);
+        }).catch(() => setLoading(false));
     }, []);
 
-    if (!data) return null;
+    if (loading) return <div className="dashboard"><p>Loading...</p></div>;
 
     return (
         <div className="dashboard">

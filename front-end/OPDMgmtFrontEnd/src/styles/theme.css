@@ -38,12 +38,27 @@ a {
     padding: 12px 22px;
     border-radius: 6px;
     font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .btn-primary:hover {
     background-color: #2ea043;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(46, 160, 67, 0.3);
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
 }
 
 .btn-secondary {
@@ -467,12 +482,37 @@ a {
         transform 0.2s ease,
         box-shadow 0.2s ease,
         border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    transition: all 0.5s;
+}
+
+.dashboard-card:hover::before {
+    animation: shimmer 0.6s;
 }
 
 .dashboard-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     border-color: #30363d;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(88, 166, 255, 0.1);
 }
 
 /* ========================= */
@@ -497,4 +537,5 @@ a {
 
 .navbar-logo:hover {
     color: #58a6ff;
+    transition: color 0.3s ease;
 }

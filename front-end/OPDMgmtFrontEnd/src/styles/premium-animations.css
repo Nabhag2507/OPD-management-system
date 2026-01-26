@@ -1,0 +1,650 @@
+/* ============================================================ */
+/* PREMIUM ADVANCED ANIMATIONS - ENTERPRISE LEVEL */
+/* ============================================================ */
+
+/* ========================= */
+/* GLASSMORPHISM EFFECT      */
+/* ========================= */
+
+.glassmorphic {
+    background: rgba(22, 27, 34, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.glassmorphic:hover {
+    background: rgba(22, 27, 34, 0.8);
+    border-color: rgba(88, 166, 255, 0.3);
+    box-shadow: 
+        0 8px 32px rgba(88, 166, 255, 0.2),
+        inset 0 0 20px rgba(88, 166, 255, 0.1);
+}
+
+/* ========================= */
+/* 3D TRANSFORMS             */
+/* ========================= */
+
+@keyframes perspective3D {
+    0% {
+        transform: perspective(1000px) rotateX(0) rotateY(0);
+    }
+    50% {
+        transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
+    }
+    100% {
+        transform: perspective(1000px) rotateX(0) rotateY(0);
+    }
+}
+
+@keyframes cardFlip3D {
+    from {
+        transform: perspective(1200px) rotateY(0deg);
+    }
+    to {
+        transform: perspective(1200px) rotateY(360deg);
+    }
+}
+
+@keyframes tiltCard {
+    0% {
+        transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+    }
+    100% {
+        transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    }
+}
+
+/* ========================= */
+/* NEON GLOW EFFECT          */
+/* ========================= */
+
+@keyframes neonGlow {
+    0%, 100% {
+        box-shadow: 
+            0 0 10px rgba(88, 166, 255, 0.5),
+            0 0 20px rgba(88, 166, 255, 0.3),
+            inset 0 0 10px rgba(88, 166, 255, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 0 20px rgba(88, 166, 255, 1),
+            0 0 40px rgba(88, 166, 255, 0.6),
+            inset 0 0 20px rgba(88, 166, 255, 0.2);
+    }
+}
+
+@keyframes neonTextGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(88, 166, 255, 0.5),
+            0 0 20px rgba(88, 166, 255, 0.3);
+    }
+    50% {
+        text-shadow: 
+            0 0 20px rgba(88, 166, 255, 1),
+            0 0 40px rgba(88, 166, 255, 0.6);
+    }
+}
+
+.neon-glow {
+    animation: neonGlow 2s ease-in-out infinite;
+}
+
+.neon-text {
+    animation: neonTextGlow 2s ease-in-out infinite;
+}
+
+/* ========================= */
+/* MORPHING SHAPES           */
+/* ========================= */
+
+@keyframes morphCircle {
+    0%, 100% {
+        border-radius: 50%;
+    }
+    25% {
+        border-radius: 40% 60% 70% 30%;
+    }
+    50% {
+        border-radius: 70% 30% 40% 60%;
+    }
+    75% {
+        border-radius: 60% 70% 30% 40%;
+    }
+}
+
+@keyframes morphSquare {
+    0%, 100% {
+        border-radius: 0%;
+    }
+    50% {
+        border-radius: 50%;
+    }
+}
+
+/* ========================= */
+/* ADVANCED PARALLAX         */
+/* ========================= */
+
+@keyframes parallaxFloat {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes parallaxShift {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    50% {
+        transform: translateX(10px) translateY(-10px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* ========================= */
+/* LIQUID SWIPE              */
+/* ========================= */
+
+@keyframes liquidSwipe {
+    0% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    }
+    50% {
+        clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+    }
+    100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+/* ========================= */
+/* ELASTIC BOUNCE            */
+/* ========================= */
+
+@keyframes elasticBounce {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    75% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ========================= */
+/* GRADIENT MORPHING         */
+/* ========================= */
+
+@keyframes gradientMorph {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 100% 50%;
+    }
+    50% {
+        background-position: 100% 0%;
+    }
+    75% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-morph {
+    background: linear-gradient(
+        -45deg,
+        #238636,
+        #1f6feb,
+        #58a6ff,
+        #238636
+    );
+    background-size: 400% 400%;
+    animation: gradientMorph 8s ease infinite;
+}
+
+/* ========================= */
+/* FLOATING PARTICLES        */
+/* ========================= */
+
+@keyframes float1 {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    50% {
+        transform: translateY(-30px) translateX(20px);
+    }
+}
+
+@keyframes float2 {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    50% {
+        transform: translateY(30px) translateX(-20px);
+    }
+}
+
+@keyframes float3 {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+    }
+    50% {
+        transform: translateY(-20px) translateX(-30px);
+    }
+}
+
+/* ========================= */
+/* ADVANCED MICRO-INTERACTIONS */
+/* ========================= */
+
+@keyframes rippleEffect {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rippleEffect 0.6s ease-out;
+}
+
+/* ========================= */
+/* SMOOTH REVEAL             */
+/* ========================= */
+
+@keyframes revealUp {
+    from {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes revealDown {
+    from {
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+/* ========================= */
+/* ADVANCED TEXT EFFECTS     */
+/* ========================= */
+
+@keyframes textReveal {
+    0% {
+        clip-path: polygon(0 50%, 100% 50%, 100% 50%, 0 50%);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        opacity: 1;
+    }
+}
+
+@keyframes textGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.text-gradient {
+    background: linear-gradient(
+        90deg,
+        #58a6ff,
+        #238636,
+        #58a6ff
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textGradient 3s ease infinite;
+}
+
+/* ========================= */
+/* STAGGERED LIST ANIMATION  */
+/* ========================= */
+
+@keyframes staggerIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.stagger-item {
+    animation: staggerIn 0.5s ease-out forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* ========================= */
+/* SMOOTH SCROLL ANIMATION   */
+/* ========================= */
+
+@keyframes scrollReveal {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================= */
+/* ADVANCED HOVER STATES     */
+/* ========================= */
+
+@keyframes hoverLift {
+    from {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    to {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(88, 166, 255, 0.3);
+    }
+}
+
+@keyframes hoverPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(88, 166, 255, 0);
+    }
+}
+
+/* ========================= */
+/* LOADING ANIMATIONS        */
+/* ========================= */
+
+@keyframes advancedSpinner {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.2);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes pulseGrow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.4;
+    }
+}
+
+@keyframes dotFlash {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ========================= */
+/* ADVANCED TRANSITIONS      */
+/* ========================= */
+
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes expandCollapse {
+    0% {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+/* ========================= */
+/* SVG PATH ANIMATIONS       */
+/* ========================= */
+
+@keyframes strokeDraw {
+    from {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+    }
+    to {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 0;
+    }
+}
+
+.svg-draw {
+    animation: strokeDraw 2s ease-in-out forwards;
+}
+
+/* ========================= */
+/* ADVANCED FOCUS STATES     */
+/* ========================= */
+
+@keyframes focusRing {
+    0% {
+        box-shadow: 0 0 0 2px #58a6ff;
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(88, 166, 255, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 2px #58a6ff;
+    }
+}
+
+/* ========================= */
+/* PARTICLE BURST            */
+/* ========================= */
+
+@keyframes particleBurst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+    }
+}
+
+/* ========================= */
+/* ADVANCED PAGE TRANSITIONS */
+/* ========================= */
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pageExit {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+}
+
+/* ========================= */
+/* SKELETON LOADING          */
+/* ========================= */
+
+@keyframes skeletonLoad {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        #161b22 25%,
+        #21262d 50%,
+        #161b22 75%
+    );
+    background-size: 1000px 100%;
+    animation: skeletonLoad 2s infinite;
+}
+
+/* ========================= */
+/* ADVANCED SCALE EFFECTS    */
+/* ========================= */
+
+@keyframes elasticScale {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(0.95, 1.05);
+    }
+    50% {
+        transform: scale(1.05, 0.95);
+    }
+    75% {
+        transform: scale(0.98, 1.02);
+    }
+}
+
+/* ========================= */
+/* PREMIUM BUTTON HOVER      */
+/* ========================= */
+
+@keyframes premiumHover {
+    0% {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(88, 166, 255, 0.3);
+    }
+    100% {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 8px 20px rgba(88, 166, 255, 0.25);
+    }
+}
+
+/* ========================= */
+/* ADVANCED COLOR SHIFT      */
+/* ========================= */
+
+@keyframes advancedColorShift {
+    0% {
+        color: #238636;
+        text-shadow: 0 0 10px rgba(35, 134, 54, 0.3);
+    }
+    25% {
+        color: #58a6ff;
+        text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+    }
+    50% {
+        color: #1f6feb;
+        text-shadow: 0 0 10px rgba(31, 110, 251, 0.3);
+    }
+    75% {
+        color: #d29922;
+        text-shadow: 0 0 10px rgba(210, 153, 34, 0.3);
+    }
+    100% {
+        color: #238636;
+        text-shadow: 0 0 10px rgba(35, 134, 54, 0.3);
+    }
+}

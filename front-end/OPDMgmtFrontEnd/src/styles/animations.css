@@ -1,0 +1,636 @@
+/* ============================================================ */
+/* COMPREHENSIVE ANIMATIONS & TRANSFORMATIONS */
+/* ============================================================ */
+
+/* ========================= */
+/* PAGE ENTRY ANIMATIONS     */
+/* ========================= */
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromBottom {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================= */
+/* STAGGER ANIMATIONS        */
+/* ========================= */
+
+@keyframes staggerFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-card:nth-child(1) {
+    animation: staggerFadeUp 0.4s ease-out 0.05s both;
+}
+
+.dashboard-card:nth-child(2) {
+    animation: staggerFadeUp 0.4s ease-out 0.1s both;
+}
+
+.dashboard-card:nth-child(3) {
+    animation: staggerFadeUp 0.4s ease-out 0.15s both;
+}
+
+.dashboard-card:nth-child(4) {
+    animation: staggerFadeUp 0.4s ease-out 0.2s both;
+}
+
+/* ========================= */
+/* HOVER TRANSFORMATIONS     */
+/* ========================= */
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(88, 166, 255, 0);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* ========================= */
+/* BUTTON ANIMATIONS         */
+/* ========================= */
+
+@keyframes buttonPress {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes buttonHoverGlow {
+    from {
+        box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.7);
+    }
+    to {
+        box-shadow: 0 0 0 10px rgba(88, 166, 255, 0);
+    }
+}
+
+.btn-primary:active,
+.btn-gradient:active {
+    animation: buttonPress 0.3s ease-in-out;
+}
+
+/* ========================= */
+/* TABLE ROW ANIMATIONS      */
+/* ========================= */
+
+@keyframes rowHighlight {
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: rgba(88, 166, 255, 0.1);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.data-table tbody tr:hover {
+    animation: rowHighlight 0.4s ease-in-out;
+}
+
+/* ========================= */
+/* SPINNER ANIMATION         */
+/* ========================= */
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(88, 166, 255, 0.3);
+    border-top-color: #58a6ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* ========================= */
+/* WAVE ANIMATION            */
+/* ========================= */
+
+@keyframes wave {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    50% {
+        transform: translateX(0) translateY(-5px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+.wave {
+    animation: wave 0.6s ease-in-out infinite;
+}
+
+/* ========================= */
+/* BOUNCE ANIMATION          */
+/* ========================= */
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ========================= */
+/* FORM INPUT FOCUS          */
+/* ========================= */
+
+@keyframes inputFocus {
+    from {
+        box-shadow: 0 0 0 0 rgba(88, 166, 255, 0.4);
+    }
+    to {
+        box-shadow: 0 0 0 8px rgba(88, 166, 255, 0);
+    }
+}
+
+.form-input:focus,
+.form-group input:focus,
+.form-group select:focus {
+    animation: inputFocus 0.4s ease-out;
+}
+
+/* ========================= */
+/* DROPDOWN ANIMATIONS       */
+/* ========================= */
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================= */
+/* FADE IN / OUT             */
+/* ========================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ========================= */
+/* ZOOM ANIMATIONS           */
+/* ========================= */
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+/* ========================= */
+/* FLIP ANIMATION            */
+/* ========================= */
+
+@keyframes flip {
+    from {
+        transform: perspective(400px) rotateY(0);
+    }
+    to {
+        transform: perspective(400px) rotateY(360deg);
+    }
+}
+
+/* ========================= */
+/* HEARTBEAT ANIMATION       */
+/* ========================= */
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ========================= */
+/* JELLO SHAKE ANIMATION     */
+/* ========================= */
+
+@keyframes jello {
+    0%, 11.1%, 100% {
+        transform: none;
+    }
+    22.2% {
+        transform: skewX(-12.5deg) skewY(-12.5deg);
+    }
+    33.3% {
+        transform: skewX(6.25deg) skewY(6.25deg);
+    }
+    44.4% {
+        transform: skewX(-3.125deg) skewY(-3.125deg);
+    }
+    55.5% {
+        transform: skewX(1.5625deg) skewY(1.5625deg);
+    }
+    66.6% {
+        transform: skewX(-0.78125deg) skewY(-0.78125deg);
+    }
+    77.7% {
+        transform: skewX(0.390625deg) skewY(0.390625deg);
+    }
+    88.8% {
+        transform: skewX(-0.1953125deg) skewY(-0.1953125deg);
+    }
+}
+
+.error {
+    animation: jello 0.5s ease-in-out;
+}
+
+/* ========================= */
+/* SMOOTH TRANSITIONS        */
+/* ========================= */
+
+.smooth-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fast-transition {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slow-transition {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================= */
+/* GRADIENT ANIMATIONS       */
+/* ========================= */
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-animated {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+/* ========================= */
+/* SLIDE ANIMATIONS          */
+/* ========================= */
+
+@keyframes slideLeft {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* ========================= */
+/* NOTIFICATION ANIMATIONS   */
+/* ========================= */
+
+@keyframes slideInNotification {
+    from {
+        opacity: 0;
+        transform: translateX(100px) rotate(10deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
+@keyframes slideOutNotification {
+    from {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px) rotate(10deg);
+    }
+}
+
+/* ========================= */
+/* RIPPLE EFFECT             */
+/* ========================= */
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ========================= */
+/* TEXT ANIMATIONS           */
+/* ========================= */
+
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ========================= */
+/* SCALE TRANSFORM           */
+/* ========================= */
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0.9);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleDown {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0.9);
+    }
+}
+
+/* ========================= */
+/* SKEW ANIMATION            */
+/* ========================= */
+
+@keyframes skewIn {
+    from {
+        transform: skewX(-20deg);
+        opacity: 0;
+    }
+    to {
+        transform: skewX(0);
+        opacity: 1;
+    }
+}
+
+/* ========================= */
+/* ROTATE ANIMATIONS         */
+/* ========================= */
+
+@keyframes rotateIn {
+    from {
+        transform: rotate(-200deg);
+        opacity: 0;
+    }
+    to {
+        transform: rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes rotateOut {
+    from {
+        transform: rotate(0);
+        opacity: 1;
+    }
+    to {
+        transform: rotate(200deg);
+        opacity: 0;
+    }
+}
+
+/* ========================= */
+/* COLOR SHIFT ANIMATION     */
+/* ========================= */
+
+@keyframes colorShift {
+    0% {
+        background-color: #238636;
+    }
+    50% {
+        background-color: #2ea043;
+    }
+    100% {
+        background-color: #238636;
+    }
+}
+
+/* ========================= */
+/* ATTENTION SEEKER          */
+/* ========================= */
+
+@keyframes attention {
+    0%, 100% {
+        transform: scale(1);
+    }
+    10%, 20% {
+        transform: scale(0.9) rotate(-3deg);
+    }
+    30%, 50%, 70%, 90% {
+        transform: scale(1.1) rotate(3deg);
+    }
+    40%, 60%, 80% {
+        transform: scale(1.1) rotate(-3deg);
+    }
+}
+
+/* ========================= */
+/* ELEMENT REVEAL            */
+/* ========================= */
+
+@keyframes revealLeft {
+    from {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    }
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes revealRight {
+    from {
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+    }
+    to {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+}
+
+/* ========================= */
+/* PARALLAX EFFECT           */
+/* ========================= */
+
+@keyframes parallax {
+    0% {
+        transform: translateZ(0);
+    }
+    100% {
+        transform: translateZ(50px);
+    }
+}
