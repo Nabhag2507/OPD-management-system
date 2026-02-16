@@ -1,16 +1,19 @@
-const Button = ({ label, onClick, className = "btn-primary", disabled = false, type = "button" }) => {
+const Button = ({
+    label,
+    onClick,
+    variant = "primary",
+    disabled = false,
+    type = "button"
+}) => {
+
     return (
-        <button 
-            type={type} 
-            className={`${className} smooth-transition`}
-            onClick={onClick} 
+        <button
+            type={type}
+            onClick={onClick}
             disabled={disabled}
-            style={{
-                position: 'relative',
-                overflow: 'hidden'
-            }}
+            className={`btn ${variant}`}
         >
-            {label}
+            <span>{label}</span>
         </button>
     );
 };

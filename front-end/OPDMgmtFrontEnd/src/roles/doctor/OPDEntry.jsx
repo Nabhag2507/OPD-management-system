@@ -4,11 +4,13 @@ import Table from "../../components/common/Table";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import AddForm from "../../components/crud/AddForm";
+import { useNavigate } from "react-router-dom";
 
 const OPDEntry = () => {
     const [opds, setOpds] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchOPDs();
@@ -51,13 +53,17 @@ const OPDEntry = () => {
     return (
         <div className="dashboard">
             <h1 className="dashboard-title">OPD Entry</h1>
-            <Button label="Add OPD Entry" onClick={() => setShowModal(true)} className="btn-primary" />
-            
+            <Button
+                label="Add OPD Entry"
+                onClick={() => navigate("/doctor/opd/add")}
+                className="btn-primary"
+            />
+
             <Table columns={columns} data={opds} />
 
-            <Modal show={showModal} onClose={() => setShowModal(false)} title="Add OPD Entry">
+            {/* <Modal show={showModal} onClose={() => setShowModal(false)} title="Add OPD Entry">
                 <AddForm fields={fields} onSubmit={handleAdd} />
-            </Modal>
+            </Modal> */}
         </div>
     );
 };

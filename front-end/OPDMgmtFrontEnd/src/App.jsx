@@ -22,6 +22,7 @@ import Reports from "./roles/admin/Reports";
 // Doctor Pages
 import MyPatients from "./roles/doctor/MyPatients";
 import DoctorOPDEntry from "./roles/doctor/OPDEntry";
+import AddOPDPage from "./roles/doctor/AddOpdEntry";
 import Prescriptions from "./roles/doctor/Prescriptions";
 
 // Receptionist Pages
@@ -75,6 +76,7 @@ function App() {
         <Route index element={<DoctorDashboard />} />
         <Route path="patients" element={<MyPatients />} />
         <Route path="opd" element={<DoctorOPDEntry />} />
+        <Route path="opd/add" element={<AddOPDPage />} />
         <Route path="prescriptions" element={<Prescriptions />} />
       </Route>
 
