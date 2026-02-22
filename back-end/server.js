@@ -11,6 +11,8 @@ const treatmentRouter = require('./routes/treatement.route');
 const appointmentRouter = require('./routes/appointment.route');
 const billingRouter = require('./routes/billing.route');
 const diagnosisRouter = require('./routes/diagnosis.route');
+const hospitalRouter = require('./routes/hospital.route');
+const receiptRouter = require('./routes/receipt.route');
 
 const app = express();
 
@@ -19,13 +21,15 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/patients", patientRouter);
-app.use("/opd", opdRouter);
-app.use("/doctors", doctorRouter);
-app.use("/treatement", treatmentRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/billing", billingRouter);
 app.use("diagnosis", diagnosisRouter);
+app.use("/doctors", doctorRouter);
+app.use("/hospitals", hospitalRouter);
+app.use("/opd", opdRouter);
+app.use("/patients", patientRouter);
+app.use("/receipt", receiptRouter);
+app.use("/treatement", treatmentRouter);
 
 PORT = process.env.PORT || 3000;
 
