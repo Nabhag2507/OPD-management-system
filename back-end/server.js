@@ -1,20 +1,40 @@
-const express = require('express')
+require('dotenv').config();
+
+const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-const app = express()
+const patientRouter = require('./routes/patient.route');
+const opdRouter = require('./routes/opd.route');
+const doctorRouter = require('./routes/doctor.route');
+const treatmentRouter = require('./routes/treatement.route');
+const appointmentRouter = require('./routes/appointment.route');
+const billingRouter = require('./routes/billing.route');
+const diagnosisRouter = require('./routes/diagnosis.route');
 
-connectDB();
+const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-require('dotenv').config();
+// Routes
+app.use("/patients", patientRouter);
+app.use("/opd", opdRouter);
+app.use("/doctors", doctorRouter);
+app.use("/treatement", treatmentRouter);
+app.use("/appointment", appointmentRouter);
+app.use("/billing", billingRouter);
+app.use("diagnosis", diagnosisRouter);
 
-app.get("/", (req, res)=>{
-    res.json({message :"Your website is running"})
-})
+PORT = process.env.PORT || 3000;
 
-app.listen(3000, ()=>{
-    console.log("Server started running on port 3000");
-})
+connectDB()
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log("Database connection failed", err);
+    });
