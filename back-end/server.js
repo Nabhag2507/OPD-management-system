@@ -13,6 +13,7 @@ const billingRouter = require('./routes/billing.route');
 const diagnosisRouter = require('./routes/diagnosis.route');
 const hospitalRouter = require('./routes/hospital.route');
 const receiptRouter = require('./routes/receipt.route');
+const authRouter = require('./routes/auth.route');
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+app.use("/auth", authRouter);
+
 app.use("/appointment", appointmentRouter);
 app.use("/billing", billingRouter);
 app.use("diagnosis", diagnosisRouter);
