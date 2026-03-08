@@ -5,7 +5,7 @@ const {
     createTreatment,
     updateTreatment,
     deleteTreatment
-} = require("../controllers/treatment.controller");
+} = require("../controllers/treatement.controller");
 
 const treatmentRouter = Router();
 

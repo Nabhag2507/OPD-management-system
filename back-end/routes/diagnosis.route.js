@@ -5,7 +5,7 @@ const {
     createDiagnosis,
     updateDiagnosis,
     deleteDiagnosis
-} = require("../controllers/diagnosis.controller");
+} = require("../controllers/");
 
 const diagnosisRouter = Router();
 

@@ -1,4 +1,4 @@
-const Hospital = require("../models/hospital.model");
+const Hospital = require("../models/hospitals.model");
 
 // GET all hospitals
 exports.getAllHospitals = async (req, res) => {
