@@ -1,0 +1,10 @@
+Fixed backend startup and routing so the API responds properly.
+
+Short notes:
+- Fixed DB connection setup in `config/db.js`.
+- Server now starts even if MongoDB is temporarily unreachable.
+- Added `/` and `/health` endpoints for quick status checks.
+- Fixed missing slash on the diagnosis route in `server.js`.
+- Added common route aliases like `/treatment`, `/appointments`, `/patients`, etc.
+- Restored error handling in `controllers/billing.controller.js`.
+- Added JSON 404 and server error responses for unmatched routes and runtime failures.
