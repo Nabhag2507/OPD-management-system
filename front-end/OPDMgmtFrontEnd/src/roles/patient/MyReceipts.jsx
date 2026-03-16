@@ -1,40 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import crudService from "../../services/crudService";
+import Table from "../../components/common/Table";
 
-const MyTreatments = () => {
-    const [treatments] = useState([
-        { id: 1, treatment: "General Check-up", date: "2025-01-20", doctor: "Dr. Sharma", cost: "₹500" },
-        { id: 2, treatment: "Blood Test", date: "2025-01-21", doctor: "Dr. Patel", cost: "₹1000" },
-        { id: 3, treatment: "Consultation", date: "2025-01-25", doctor: "Dr. Kumar", cost: "₹800" }
-    ]);
+const MyReceipts = () => {
+    const [receipts, setReceipts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchReceipts = async () => {
+            try {
+                const response = await crudService.receipts.getAll();
+                setReceipts(response.data);
+            } catch (error) {
+                console.error("Error fetching receipts:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchReceipts();
+    }, []);
+
+    if (loading) return <div className="dashboard"><p>Loading...</p></div>;
 
     return (
         <div className="dashboard">
-            <h1 className="dashboard-title">My Treatments</h1>
-            
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Treatment</th>
-                        <th>Date</th>
-                        <th>Doctor</th>
-                        <th>Cost</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {treatments.map(t => (
-                        <tr key={t.id}>
-                            <td>{t.id}</td>
-                            <td>{t.treatment}</td>
-                            <td>{t.date}</td>
-                            <td>{t.doctor}</td>
-                            <td>{t.cost}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <h1 className="dashboard-title">My Receipts</h1>
+            <Table columns={["id", "patient_id", "opd_id", "amount", "paymentMethod", "status"]} data={receipts} />
         </div>
     );
 };
 
-export default MyTreatments;
+export default MyReceipts;

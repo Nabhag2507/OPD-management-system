@@ -1,19 +1,19 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const ProtectedRoute = ({ role: allowedRole, children }) => {
     const { role, loading } = useAuth();
+    const normalizedAllowedRole = allowedRole?.toUpperCase();
 
-    // wait for auth hydration
     if (loading) {
-        return null; // or a spinner later
+        return null;
     }
 
     if (!role) {
         return <Navigate to="/login" replace />;
     }
 
-    if (allowedRole && role !== allowedRole) {
+    if (normalizedAllowedRole && role !== normalizedAllowedRole) {
         return <Navigate to="/login" replace />;
     }
 

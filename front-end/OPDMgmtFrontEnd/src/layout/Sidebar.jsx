@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { roleBasedMenu } from "../utils/roleBasedMenu";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const Sidebar = () => {
     const { role } = useAuth();

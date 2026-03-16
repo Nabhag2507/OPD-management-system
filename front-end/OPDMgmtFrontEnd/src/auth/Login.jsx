@@ -1,21 +1,40 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
+import authService from "../services/authService";
 
 const Login = () => {
-    const [role, setRole] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState("");
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        if (!role) return;
-
-        login(role);
-
+    const goToDashboard = (role) => {
         if (role === "ADMIN") navigate("/admin");
         if (role === "DOCTOR") navigate("/doctor");
         if (role === "RECEPTIONIST") navigate("/receptionist");
         if (role === "PATIENT") navigate("/patient");
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError("");
+        setSubmitting(true);
+
+        try {
+            const response = await authService.login(email, password);
+            if (!response.user) {
+                throw new Error("Login failed");
+            }
+            login(response.user, response.token);
+            goToDashboard(response.user.role);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
@@ -23,35 +42,33 @@ const Login = () => {
             <div className="auth-card slide-in">
                 <h2 className="auth-title">Sign in to MediCore</h2>
 
-                <form className="auth-form">
-                    <label>
-                        Role
-                        <select value={role} onChange={(e) => setRole(e.target.value)}>
-                            <option value="">Select role</option>
-                            <option value="ADMIN">Admin</option>
-                            <option value="DOCTOR">Doctor</option>
-                            <option value="RECEPTIONIST">Receptionist</option>
-                            <option value="PATIENT">Patient</option>
-                        </select>
-                    </label>
-
+                <form className="auth-form" onSubmit={handleLogin}>
                     <label>
                         Email
-                        <input type="email" placeholder="ignored@example.com" />
+                        <input
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
                     </label>
 
                     <label>
                         Password
-                        <input type="password" placeholder="ignored" />
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
                     </label>
 
-                    <button
-                        type="button"
-                        className="btn-gradient full"
-                        onClick={handleLogin}
-                        disabled={!role}
-                    >
-                        Sign in
+                    {error && <p className="form-error">{error}</p>}
+
+                    <button type="submit" className="btn-gradient full" disabled={submitting}>
+                        {submitting ? "Signing in..." : "Sign in"}
                     </button>
                 </form>
 

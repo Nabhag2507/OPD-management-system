@@ -1,4 +1,11 @@
 const Treatment = require("../models/treatment.model");
+const {
+    pickDefined,
+    sendError,
+    toNumber,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all treatments
 exports.getAllTreatments = async (req, res) => {
@@ -10,16 +17,14 @@ exports.getAllTreatments = async (req, res) => {
             treatments
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // GET treatment by ID
 exports.getTreatmentById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "treatment");
         const treatment = await Treatment.findById(req.params.id);
 
         if (!treatment) {
@@ -34,17 +39,17 @@ exports.getTreatmentById = async (req, res) => {
             treatment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE treatment
 exports.createTreatment = async (req, res) => {
     try {
-        const newTreatment = await Treatment.create(req.body);
+        const newTreatment = await Treatment.create({
+            treatmentName: trimString(req.body.treatmentName),
+            treatmentCost: toNumber(req.body.treatmentCost),
+        });
 
         res.status(201).json({
             err: false,
@@ -52,20 +57,23 @@ exports.createTreatment = async (req, res) => {
             treatment: newTreatment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE treatment
 exports.updateTreatment = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "treatment");
         const updatedTreatment = await Treatment.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            {
+                $set: pickDefined({
+                    treatmentName: trimString(req.body.treatmentName),
+                    treatmentCost: toNumber(req.body.treatmentCost),
+                }),
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedTreatment) {
@@ -81,16 +89,14 @@ exports.updateTreatment = async (req, res) => {
             treatment: updatedTreatment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE treatment
 exports.deleteTreatment = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "treatment");
         const deletedTreatment = await Treatment.findByIdAndDelete(req.params.id);
 
         if (!deletedTreatment) {
@@ -105,9 +111,6 @@ exports.deleteTreatment = async (req, res) => {
             message: "Treatment deleted successfully"
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };

@@ -1,4 +1,10 @@
 const Diagnosis = require("../models/diagnosis.model");
+const {
+    pickDefined,
+    sendError,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all diagnoses
 exports.getAllDiagnoses = async (req, res) => {
@@ -10,16 +16,14 @@ exports.getAllDiagnoses = async (req, res) => {
             diagnoses
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // GET diagnosis by ID
 exports.getDiagnosisById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "diagnosis");
         const diagnosis = await Diagnosis.findById(req.params.id);
 
         if (!diagnosis) {
@@ -34,17 +38,17 @@ exports.getDiagnosisById = async (req, res) => {
             diagnosis
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE diagnosis
 exports.createDiagnosis = async (req, res) => {
     try {
-        const newDiagnosis = await Diagnosis.create(req.body);
+        const newDiagnosis = await Diagnosis.create({
+            diagnosisName: trimString(req.body.diagnosisName),
+            code: trimString(req.body.code),
+        });
 
         res.status(201).json({
             err: false,
@@ -52,20 +56,23 @@ exports.createDiagnosis = async (req, res) => {
             diagnosis: newDiagnosis
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE diagnosis
 exports.updateDiagnosis = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "diagnosis");
         const updatedDiagnosis = await Diagnosis.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            {
+                $set: pickDefined({
+                    diagnosisName: trimString(req.body.diagnosisName),
+                    code: trimString(req.body.code),
+                }),
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedDiagnosis) {
@@ -81,16 +88,14 @@ exports.updateDiagnosis = async (req, res) => {
             diagnosis: updatedDiagnosis
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE diagnosis
 exports.deleteDiagnosis = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "diagnosis");
         const deletedDiagnosis = await Diagnosis.findByIdAndDelete(req.params.id);
 
         if (!deletedDiagnosis) {
@@ -105,9 +110,6 @@ exports.deleteDiagnosis = async (req, res) => {
             message: "Diagnosis deleted successfully"
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };

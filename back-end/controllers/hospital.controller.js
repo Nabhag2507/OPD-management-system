@@ -1,4 +1,11 @@
 const Hospital = require("../models/hospitals.model");
+const {
+    pickDefined,
+    sendError,
+    toNumber,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all hospitals
 exports.getAllHospitals = async (req, res) => {
@@ -10,16 +17,14 @@ exports.getAllHospitals = async (req, res) => {
             hospitals
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // GET hospital by ID
 exports.getHospitalById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "hospital");
         const hospital = await Hospital.findById(req.params.id);
 
         if (!hospital) {
@@ -34,17 +39,18 @@ exports.getHospitalById = async (req, res) => {
             hospital
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE hospital
 exports.createHospital = async (req, res) => {
     try {
-        const newHospital = await Hospital.create(req.body);
+        const newHospital = await Hospital.create({
+            hospitalName: trimString(req.body.hospitalName),
+            location: trimString(req.body.location),
+            beds: toNumber(req.body.beds),
+        });
 
         res.status(201).json({
             err: false,
@@ -52,20 +58,24 @@ exports.createHospital = async (req, res) => {
             hospital: newHospital
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE hospital
 exports.updateHospital = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "hospital");
         const updatedHospital = await Hospital.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            {
+                $set: pickDefined({
+                    hospitalName: trimString(req.body.hospitalName),
+                    location: trimString(req.body.location),
+                    beds: toNumber(req.body.beds),
+                }),
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedHospital) {
@@ -81,16 +91,14 @@ exports.updateHospital = async (req, res) => {
             hospital: updatedHospital
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE hospital
 exports.deleteHospital = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "hospital");
         const deletedHospital = await Hospital.findByIdAndDelete(req.params.id);
 
         if (!deletedHospital) {
@@ -105,9 +113,6 @@ exports.deleteHospital = async (req, res) => {
             message: "Hospital deleted successfully"
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };

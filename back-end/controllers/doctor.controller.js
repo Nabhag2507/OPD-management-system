@@ -1,4 +1,13 @@
 const Doctor = require("../models/doctors.model");
+const Hospital = require("../models/hospitals.model");
+const {
+    ensureReferences,
+    pickDefined,
+    sendError,
+    toNumber,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all doctors
 exports.getAllDoctors = async (req, res) => {
@@ -10,16 +19,14 @@ exports.getAllDoctors = async (req, res) => {
             doctors
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // GET doctor by ID
 exports.getDoctorById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "doctor");
         const doctor = await Doctor.findById(req.params.id).populate("hospital");
 
         if (!doctor) {
@@ -34,17 +41,25 @@ exports.getDoctorById = async (req, res) => {
             doctor
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE doctor
 exports.createDoctor = async (req, res) => {
     try {
-        const newDoctor = await Doctor.create(req.body);
+        const payload = {
+            doctorName: trimString(req.body.doctorName),
+            specialization: trimString(req.body.specialization),
+            hospital: req.body.hospital,
+            experience: toNumber(req.body.experience),
+        };
+
+        await ensureReferences([
+            { Model: Hospital, id: payload.hospital, label: "hospital" },
+        ]);
+
+        const newDoctor = await Doctor.create(payload);
 
         res.status(201).json({
             err: false,
@@ -52,20 +67,30 @@ exports.createDoctor = async (req, res) => {
             doctor: newDoctor
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE doctor
 exports.updateDoctor = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "doctor");
+
+        const updates = pickDefined({
+            doctorName: trimString(req.body.doctorName),
+            specialization: trimString(req.body.specialization),
+            hospital: req.body.hospital,
+            experience: toNumber(req.body.experience),
+        });
+
+        await ensureReferences([
+            { Model: Hospital, id: updates.hospital, label: "hospital" },
+        ]);
+
         const updatedDoctor = await Doctor.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            { $set: updates },
+            { new: true, runValidators: true }
         );
 
         if (!updatedDoctor) {
@@ -81,16 +106,14 @@ exports.updateDoctor = async (req, res) => {
             doctor: updatedDoctor
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE doctor
 exports.deleteDoctor = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "doctor");
         const deletedDoctor = await Doctor.findByIdAndDelete(req.params.id);
 
         if (!deletedDoctor) {
@@ -105,9 +128,6 @@ exports.deleteDoctor = async (req, res) => {
             message: "Doctor deleted successfully"
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };

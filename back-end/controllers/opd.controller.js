@@ -1,4 +1,14 @@
 const OPD = require("../models/opd.model");
+const Diagnosis = require("../models/diagnosis.model");
+const Doctor = require("../models/doctors.model");
+const Patient = require("../models/patient.model");
+const {
+    ensureReferences,
+    pickDefined,
+    sendError,
+    toDate,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all OPD records
 exports.getAllOPD = async (req, res) => {
@@ -14,16 +24,14 @@ exports.getAllOPD = async (req, res) => {
             opdRecords,
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error",
-        });
+        sendError(res, err);
     }
 };
 
 // GET OPD by ID
 exports.getOPDById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "opd");
         const opd = await OPD.findById(req.params.id)
             .populate("patient")
             .populate("doctor")
@@ -41,24 +49,27 @@ exports.getOPDById = async (req, res) => {
             opd,
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error",
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE OPD record
 exports.createOPD = async (req, res) => {
     try {
-        const { patient, doctor, diagnosis, visitDate } = req.body;
+        const payload = {
+            patient: req.body.patient,
+            doctor: req.body.doctor,
+            diagnosis: req.body.diagnosis,
+            visitDate: toDate(req.body.visitDate),
+        };
 
-        const newOPD = await OPD.create({
-            patient,
-            doctor,
-            diagnosis,
-            visitDate,
-        });
+        await ensureReferences([
+            { Model: Patient, id: payload.patient, label: "patient" },
+            { Model: Doctor, id: payload.doctor, label: "doctor" },
+            { Model: Diagnosis, id: payload.diagnosis, label: "diagnosis" },
+        ]);
+
+        const newOPD = await OPD.create(payload);
 
         res.status(201).json({
             err: false,
@@ -66,20 +77,32 @@ exports.createOPD = async (req, res) => {
             opd: newOPD,
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error",
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE OPD
 exports.updateOPD = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "opd");
+
+        const updates = pickDefined({
+            patient: req.body.patient,
+            doctor: req.body.doctor,
+            diagnosis: req.body.diagnosis,
+            visitDate: toDate(req.body.visitDate),
+        });
+
+        await ensureReferences([
+            { Model: Patient, id: updates.patient, label: "patient" },
+            { Model: Doctor, id: updates.doctor, label: "doctor" },
+            { Model: Diagnosis, id: updates.diagnosis, label: "diagnosis" },
+        ]);
+
         const updatedOPD = await OPD.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            { $set: updates },
+            { new: true, runValidators: true }
         );
 
         if (!updatedOPD) {
@@ -95,16 +118,14 @@ exports.updateOPD = async (req, res) => {
             opd: updatedOPD,
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error",
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE OPD
 exports.deleteOPD = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "opd");
         const deletedOPD = await OPD.findByIdAndDelete(req.params.id);
 
         if (!deletedOPD) {
@@ -119,9 +140,6 @@ exports.deleteOPD = async (req, res) => {
             message: "OPD deleted successfully",
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error",
-        });
+        sendError(res, err);
     }
 };

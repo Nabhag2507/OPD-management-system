@@ -11,18 +11,13 @@ const Intro = () => {
                 </h1>
 
                 <p className="intro-subtitle">
-                    A modern platform to manage hospitals, doctors, patients,
-                    OPD workflows, and billing — securely and efficiently.
+                    A calm workspace to manage hospitals, doctors, patients,
+                    OPD workflows, and billing in one connected system.
                 </p>
 
-                {/* 🔥 MAIN CTA BUTTONS */}
                 <div className="intro-cta">
                     <Link to="/signup" className="btn-gradient">
                         Get started
-                    </Link>
-
-                    <Link to="/login" className="btn-secondary">
-                        Sign in
                     </Link>
                 </div>
             </section>

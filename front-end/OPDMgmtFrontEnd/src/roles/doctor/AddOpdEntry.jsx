@@ -5,7 +5,6 @@ import Button from "../../components/common/Button";
 
 const AddOPDPage = () => {
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         patient_id: "",
         doctor_id: "",
@@ -15,10 +14,10 @@ const AddOPDPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             [name]: value
-        });
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -27,7 +26,7 @@ const AddOPDPage = () => {
         try {
             const response = await crudService.opds.create(formData);
             if (response.success) {
-                alert("OPD Entry added successfully!");
+                alert("OPD entry added successfully.");
                 navigate(-1);
             }
         } catch (error) {
@@ -38,25 +37,21 @@ const AddOPDPage = () => {
 
     return (
         <div className="dashboard">
-
-            {/* Header */}
             <div className="form-header">
                 <Button
-                    label="← Back"
+                    label="Back"
                     onClick={() => navigate(-1)}
                     variant="secondary"
                 />
                 <h1 className="dashboard-title">Add OPD Entry</h1>
             </div>
 
-            {/* Form */}
             <div className="form-container">
                 <form onSubmit={handleSubmit} className="opd-form">
-
                     <div className="form-group">
                         <label>Patient ID</label>
                         <input
-                            type="number"
+                            type="text"
                             name="patient_id"
                             value={formData.patient_id}
                             onChange={handleChange}
@@ -67,7 +62,7 @@ const AddOPDPage = () => {
                     <div className="form-group">
                         <label>Doctor ID</label>
                         <input
-                            type="number"
+                            type="text"
                             name="doctor_id"
                             value={formData.doctor_id}
                             onChange={handleChange}
@@ -78,7 +73,7 @@ const AddOPDPage = () => {
                     <div className="form-group">
                         <label>Diagnosis ID</label>
                         <input
-                            type="number"
+                            type="text"
                             name="diagnosis_id"
                             value={formData.diagnosis_id}
                             onChange={handleChange}
@@ -102,10 +97,8 @@ const AddOPDPage = () => {
                         type="submit"
                         variant="primary"
                     />
-
                 </form>
             </div>
-
         </div>
     );
 };

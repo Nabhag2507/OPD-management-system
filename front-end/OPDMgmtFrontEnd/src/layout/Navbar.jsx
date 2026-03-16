@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const Navbar = () => {
-    const { role, logout } = useAuth();
+    const { role, user, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogoClick = () => {
@@ -30,6 +30,7 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-right">
+                <span className="navbar-user">{user?.name || "Guest"}</span>
                 <span className="navbar-role">{role}</span>
                 <button className="btn-secondary" onClick={handleLogout}>
                     Logout

@@ -38,11 +38,12 @@ const ReceiptEntry = () => {
         }
     };
 
-    const columns = ["id", "patient_id", "amount", "date", "status"];
+    const columns = ["id", "patient_id", "opd_id", "amount", "paymentMethod", "status"];
     const fields = [
-        { name: "patient_id", label: "Patient ID", type: "number", required: true },
+        { name: "patient_id", label: "Patient ID", type: "text", required: true },
+        { name: "opd_id", label: "OPD ID", type: "text", required: true },
         { name: "amount", label: "Amount", type: "number", required: true },
-        { name: "date", label: "Date", type: "date", required: true },
+        { name: "paymentMethod", label: "Payment Method", type: "text", required: true },
         { name: "status", label: "Status", type: "text", required: true }
     ];
 
@@ -52,7 +53,7 @@ const ReceiptEntry = () => {
         <div className="dashboard">
             <h1 className="dashboard-title">Receipt Entry</h1>
             <Button label="Create Receipt" onClick={() => setShowModal(true)} className="btn-primary" />
-            
+
             <Table columns={columns} data={receipts} />
 
             <Modal show={showModal} onClose={() => setShowModal(false)} title="Create Receipt">

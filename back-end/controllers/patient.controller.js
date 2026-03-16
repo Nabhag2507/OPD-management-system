@@ -1,19 +1,27 @@
-const patient = require("../models/patient.model");
+const Patient = require("../models/patient.model");
+const {
+    pickDefined,
+    sendError,
+    toNumber,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all patients
 exports.getAllPatients = async (req, res) => {
     try {
-        const patients = await patient.find();
+        const patients = await Patient.find();
         res.status(200).json({ err: false, patients });
     } catch (err) {
-        res.status(500).json({ err: true, message: "Internal server error" });
+        sendError(res, err);
     }
 };
 
 // GET patient by ID
 exports.getPatientById = async (req, res) => {
     try {
-        const patientById = await patient.findById(req.params.id);
+        validateObjectId(req.params.id, "patient");
+        const patientById = await Patient.findById(req.params.id);
 
         if (!patientById) {
             return res.status(404).json({ err: true, message: "Patient not found" });
@@ -21,20 +29,18 @@ exports.getPatientById = async (req, res) => {
 
         res.status(200).json({ err: false, patient: patientById });
     } catch (err) {
-        res.status(500).json({ err: true, message: "Internal server error" });
+        sendError(res, err);
     }
 };
 
 // CREATE patient
 exports.createPatient = async (req, res) => {
     try {
-        const { patientName, patientEmail, patientPhone, patientAge } = req.body;
-
-        const newPatient = await patient.create({
-            patientName,
-            patientEmail,
-            patientPhone,
-            patientAge,
+        const newPatient = await Patient.create({
+            patientName: trimString(req.body.patientName),
+            patientEmail: trimString(req.body.patientEmail)?.toLowerCase(),
+            patientPhone: toNumber(req.body.patientPhone),
+            patientAge: toNumber(req.body.patientAge),
         });
 
         res.status(201).json({
@@ -43,17 +49,26 @@ exports.createPatient = async (req, res) => {
             patient: newPatient,
         });
     } catch (err) {
-        res.status(500).json({ err: true, message: "Internal server error" });
+        sendError(res, err);
     }
 };
 
 // UPDATE patient
 exports.updatePatient = async (req, res) => {
     try {
-        const updatedPatient = await patient.findByIdAndUpdate(
+        validateObjectId(req.params.id, "patient");
+
+        const updatedPatient = await Patient.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            {
+                $set: pickDefined({
+                    patientName: trimString(req.body.patientName),
+                    patientEmail: trimString(req.body.patientEmail)?.toLowerCase(),
+                    patientPhone: toNumber(req.body.patientPhone),
+                    patientAge: toNumber(req.body.patientAge),
+                }),
+            },
+            { new: true, runValidators: true }
         );
 
         if (!updatedPatient) {
@@ -66,14 +81,15 @@ exports.updatePatient = async (req, res) => {
             patient: updatedPatient,
         });
     } catch (err) {
-        res.status(500).json({ err: true, message: "Internal server error" });
+        sendError(res, err);
     }
 };
 
 // DELETE patient
 exports.deletePatient = async (req, res) => {
     try {
-        const deletedPatient = await patient.findByIdAndDelete(req.params.id);
+        validateObjectId(req.params.id, "patient");
+        const deletedPatient = await Patient.findByIdAndDelete(req.params.id);
 
         if (!deletedPatient) {
             return res.status(404).json({ err: true, message: "Patient not found" });
@@ -84,6 +100,6 @@ exports.deletePatient = async (req, res) => {
             message: "Patient deleted successfully",
         });
     } catch (err) {
-        res.status(500).json({ err: true, message: "Internal server error" });
+        sendError(res, err);
     }
 };

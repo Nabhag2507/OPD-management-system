@@ -1,13 +1,38 @@
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendError, trimString } = require("../utils/controller.utils");
+
+const sanitizeUser = (user) => ({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+});
 
 // SIGNUP
 exports.signup = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
+        const trimmedName = trimString(name);
+        const normalizedEmail = trimString(email)?.toLowerCase();
+        const normalizedRole = trimString(role)?.toLowerCase();
 
-        const existingUser = await User.findOne({ email });
+        if (!trimmedName || !normalizedEmail || !password) {
+            return res.status(400).json({
+                err: true,
+                message: "Name, email, and password are required"
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({
+                err: true,
+                message: "Password must be at least 6 characters long"
+            });
+        }
+
+        const existingUser = await User.findOne({ email: normalizedEmail });
         if (existingUser) {
             return res.status(400).json({
                 err: true,
@@ -16,27 +41,26 @@ exports.signup = async (req, res) => {
         }
 
         const newUser = await User.create({
-            name,
-            email,
+            name: trimmedName,
+            email: normalizedEmail,
             password,
-            role
+            role: normalizedRole || undefined
         });
+
+        const token = jwt.sign(
+            { id: newUser._id, role: newUser.role },
+            process.env.JWT_SECRET || "opd-dev-secret",
+            { expiresIn: "1d" }
+        );
 
         res.status(201).json({
             err: false,
             message: "User registered successfully",
-            user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-                role: newUser.role
-            }
+            token,
+            user: sanitizeUser(newUser)
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err, "Unable to register user");
     }
 };
 
@@ -45,10 +69,18 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        const normalizedEmail = trimString(email)?.toLowerCase();
 
-        const user = await User.findOne({ email });
-        if (!user) {
+        if (!normalizedEmail || !password) {
             return res.status(400).json({
+                err: true,
+                message: "Email and password are required"
+            });
+        }
+
+        const user = await User.findOne({ email: normalizedEmail });
+        if (!user) {
+            return res.status(401).json({
                 err: true,
                 message: "Invalid credentials"
             });
@@ -56,7 +88,7 @@ exports.login = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({
+            return res.status(401).json({
                 err: true,
                 message: "Invalid credentials"
             });
@@ -64,7 +96,7 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign(
             { id: user._id, role: user.role },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || "opd-dev-secret",
             { expiresIn: "1d" }
         );
 
@@ -72,18 +104,10 @@ exports.login = async (req, res) => {
             err: false,
             message: "Login successful",
             token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
+            user: sanitizeUser(user)
         });
 
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err, "Unable to login");
     }
 };

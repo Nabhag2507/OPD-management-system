@@ -1,40 +1,53 @@
-// Mock Authentication Service
-const API_BASE_URL = "https://jsonplaceholder.typicode.com"; // Free API for demo
+import { apiRequest } from "./api";
+
+const normalizeRole = (role) => (role || "").toUpperCase();
+const toBackendRole = (role) => (role || "").toLowerCase();
+
+const mapAuthResponse = (data) => {
+    const user = data.user
+        ? {
+            ...data.user,
+            role: normalizeRole(data.user.role),
+        }
+        : null;
+
+    if (data.err || !user) {
+        throw new Error(data.message || "Authentication failed");
+    }
+
+    return {
+        success: true,
+        token: data.token || null,
+        user,
+        message: data.message,
+    };
+};
 
 export const authService = {
-  login: async (email, password, role) => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          user: {
-            id: 1,
-            email,
-            role,
-            name: role === "ADMIN" ? "Admin User" : role === "DOCTOR" ? "Dr. Smith" : role === "RECEPTIONIST" ? "John Receptionist" : "Patient User"
-          },
-          token: "mock_token_" + Date.now()
+    login: async (email, password) => {
+        const data = await apiRequest("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
         });
-      }, 500);
-    });
-  },
 
-  signup: async (email, password, role, name) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          user: { id: Math.random(), email, role, name },
-          token: "mock_token_" + Date.now()
+        return mapAuthResponse(data);
+    },
+
+    signup: async ({ email, password, role, name }) => {
+        const data = await apiRequest("/auth/signup", {
+            method: "POST",
+            body: JSON.stringify({
+                email: email.trim(),
+                password,
+                name: name.trim(),
+                role: toBackendRole(role),
+            }),
         });
-      }, 500);
-    });
-  },
 
-  logout: async () => {
-    return { success: true };
-  }
+        return mapAuthResponse(data);
+    },
+
+    logout: async () => ({ success: true }),
 };
 
 export default authService;

@@ -42,9 +42,9 @@ const OPDEntry = () => {
 
     const columns = ["id", "patient_id", "doctor_id", "diagnosis_id", "date"];
     const fields = [
-        { name: "patient_id", label: "Patient ID", type: "number", required: true },
-        { name: "doctor_id", label: "Doctor ID", type: "number", required: true },
-        { name: "diagnosis_id", label: "Diagnosis ID", type: "number", required: true },
+        { name: "patient_id", label: "Patient ID", type: "text", required: true },
+        { name: "doctor_id", label: "Doctor ID", type: "text", required: true },
+        { name: "diagnosis_id", label: "Diagnosis ID", type: "text", required: true },
         { name: "date", label: "Date", type: "date", required: true }
     ];
 

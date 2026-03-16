@@ -1,4 +1,14 @@
 const Appointment = require("../models/appointment.model");
+const Doctor = require("../models/doctors.model");
+const Patient = require("../models/patient.model");
+const {
+    ensureReferences,
+    pickDefined,
+    sendError,
+    toDate,
+    trimString,
+    validateObjectId,
+} = require("../utils/controller.utils");
 
 // GET all appointments
 exports.getAllAppointments = async (req, res) => {
@@ -12,16 +22,14 @@ exports.getAllAppointments = async (req, res) => {
             appointments
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // GET appointment by ID
 exports.getAppointmentById = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "appointment");
         const appointment = await Appointment.findById(req.params.id)
             .populate("patient")
             .populate("doctor");
@@ -38,17 +46,26 @@ exports.getAppointmentById = async (req, res) => {
             appointment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // CREATE appointment
 exports.createAppointment = async (req, res) => {
     try {
-        const newAppointment = await Appointment.create(req.body);
+        const payload = {
+            patient: req.body.patient,
+            doctor: req.body.doctor,
+            appointmentDate: toDate(req.body.appointmentDate),
+            status: trimString(req.body.status)?.toLowerCase(),
+        };
+
+        await ensureReferences([
+            { Model: Patient, id: payload.patient, label: "patient" },
+            { Model: Doctor, id: payload.doctor, label: "doctor" },
+        ]);
+
+        const newAppointment = await Appointment.create(payload);
 
         res.status(201).json({
             err: false,
@@ -56,20 +73,31 @@ exports.createAppointment = async (req, res) => {
             appointment: newAppointment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // UPDATE appointment
 exports.updateAppointment = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "appointment");
+
+        const updates = pickDefined({
+            patient: req.body.patient,
+            doctor: req.body.doctor,
+            appointmentDate: toDate(req.body.appointmentDate),
+            status: trimString(req.body.status)?.toLowerCase(),
+        });
+
+        await ensureReferences([
+            { Model: Patient, id: updates.patient, label: "patient" },
+            { Model: Doctor, id: updates.doctor, label: "doctor" },
+        ]);
+
         const updatedAppointment = await Appointment.findByIdAndUpdate(
             req.params.id,
-            { $set: req.body },
-            { new: true }
+            { $set: updates },
+            { new: true, runValidators: true }
         );
 
         if (!updatedAppointment) {
@@ -85,16 +113,14 @@ exports.updateAppointment = async (req, res) => {
             appointment: updatedAppointment
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };
 
 // DELETE appointment
 exports.deleteAppointment = async (req, res) => {
     try {
+        validateObjectId(req.params.id, "appointment");
         const deletedAppointment = await Appointment.findByIdAndDelete(req.params.id);
 
         if (!deletedAppointment) {
@@ -109,9 +135,6 @@ exports.deleteAppointment = async (req, res) => {
             message: "Appointment deleted successfully"
         });
     } catch (err) {
-        res.status(500).json({
-            err: true,
-            message: "Internal server error"
-        });
+        sendError(res, err);
     }
 };

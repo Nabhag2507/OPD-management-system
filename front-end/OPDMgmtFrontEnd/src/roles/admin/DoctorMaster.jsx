@@ -73,7 +73,7 @@ const DoctorMaster = () => {
     const fields = [
         { name: "name", label: "Doctor Name", type: "text", required: true },
         { name: "specialization", label: "Specialization", type: "text", required: true },
-        { name: "hospital_id", label: "Hospital ID", type: "number", required: true },
+        { name: "hospital_id", label: "Hospital ID", type: "text", required: true },
         { name: "experience", label: "Years of Experience", type: "number", required: true }
     ];
 
