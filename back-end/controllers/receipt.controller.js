@@ -1,6 +1,7 @@
 const Receipt = require("../models/receipt.model");
 const OPD = require("../models/opd.model");
 const Patient = require("../models/patient.model");
+const { buildScopedQuery } = require("../utils/access.utils");
 const {
     ensureReferences,
     pickDefined,
@@ -13,7 +14,8 @@ const {
 // GET all receipts
 exports.getAllReceipts = async (req, res) => {
     try {
-        const receipts = await Receipt.find()
+        const scopedQuery = await buildScopedQuery(req.user, "receipts");
+        const receipts = await Receipt.find(scopedQuery || {})
             .populate("patient")
             .populate("opd");
 
@@ -30,7 +32,11 @@ exports.getAllReceipts = async (req, res) => {
 exports.getReceiptById = async (req, res) => {
     try {
         validateObjectId(req.params.id, "receipt");
-        const receipt = await Receipt.findById(req.params.id)
+        const scopedQuery = await buildScopedQuery(req.user, "receipts");
+        const receipt = await Receipt.findOne({
+            ...(scopedQuery || {}),
+            _id: req.params.id,
+        })
             .populate("patient")
             .populate("opd");
 
@@ -99,7 +105,7 @@ exports.updateReceipt = async (req, res) => {
         const updatedReceipt = await Receipt.findByIdAndUpdate(
             req.params.id,
             { $set: updates },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedReceipt) {

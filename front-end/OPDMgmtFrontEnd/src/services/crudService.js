@@ -97,6 +97,7 @@ const doctors = createResource({
     itemKey: "doctor",
     serialize: (payload) => ({
         doctorName: payload.name,
+        doctorEmail: payload.email,
         specialization: payload.specialization,
         hospital: payload.hospital_id,
         experience: Number(payload.experience),
@@ -104,6 +105,7 @@ const doctors = createResource({
     deserialize: (item) => ({
         id: item._id,
         name: item.doctorName,
+        email: item.doctorEmail || "",
         specialization: item.specialization,
         hospital_id: pickId(item.hospital),
         experience: item.experience,

@@ -1,4 +1,5 @@
 const Treatment = require("../models/treatment.model");
+const { getScopedTreatmentsForPatient } = require("../utils/access.utils");
 const {
     pickDefined,
     sendError,
@@ -10,6 +11,15 @@ const {
 // GET all treatments
 exports.getAllTreatments = async (req, res) => {
     try {
+        if (req.user?.role === "patient") {
+            const treatments = await getScopedTreatmentsForPatient(req.user);
+
+            return res.status(200).json({
+                err: false,
+                treatments,
+            });
+        }
+
         const treatments = await Treatment.find();
 
         res.status(200).json({
@@ -73,7 +83,7 @@ exports.updateTreatment = async (req, res) => {
                     treatmentCost: toNumber(req.body.treatmentCost),
                 }),
             },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedTreatment) {

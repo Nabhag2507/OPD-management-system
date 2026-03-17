@@ -69,9 +69,10 @@ const DoctorMaster = () => {
         }
     };
 
-    const columns = ["id", "name", "specialization", "hospital_id", "experience"];
+    const columns = ["id", "name", "email", "specialization", "hospital_id", "experience"];
     const fields = [
         { name: "name", label: "Doctor Name", type: "text", required: true },
+        { name: "email", label: "Doctor Email", type: "email", required: true },
         { name: "specialization", label: "Specialization", type: "text", required: true },
         { name: "hospital_id", label: "Hospital ID", type: "text", required: true },
         { name: "experience", label: "Years of Experience", type: "number", required: true }

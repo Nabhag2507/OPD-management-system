@@ -3,20 +3,18 @@ const Modal = ({ show, onClose, title, children }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content smooth-transition" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header" style={{ animation: 'slideInFromTop 0.3s ease-out' }}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-header">
                     <h2>{title}</h2>
-                    <button 
-                        className="close-btn smooth-transition" 
+                    <button
+                        className="close-btn"
                         onClick={onClose}
-                        style={{ cursor: 'pointer' }}
+                        aria-label="Close modal"
                     >
-                        ×
+                        x
                     </button>
                 </div>
-                <div className="modal-body" style={{ animation: 'fadeIn 0.3s ease-out 0.1s both' }}>
-                    {children}
-                </div>
+                <div className="modal-body">{children}</div>
             </div>
         </div>
     );

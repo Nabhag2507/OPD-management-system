@@ -1,44 +1,74 @@
+const formatHeader = (value) =>
+    value
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+
+const formatCellValue = (value) => {
+    if (value === null || value === undefined || value === "") {
+        return "—";
+    }
+
+    if (typeof value === "boolean") {
+        return value ? "Yes" : "No";
+    }
+
+    return String(value);
+};
+
 const Table = ({ columns, data, onEdit, onDelete }) => {
+    const hasActions = Boolean(onEdit || onDelete);
+
+    if (!data.length) {
+        return (
+            <div className="empty-state">
+                <h3>No records yet</h3>
+                <p>Add a new item to populate this section.</p>
+            </div>
+        );
+    }
+
     return (
-        <table className="data-table" style={{ animation: 'fadeInScale 0.4s ease-out' }}>
-            <thead>
-                <tr>
-                    {columns.map((col) => (
-                        <th key={col}>{col.toUpperCase()}</th>
-                    ))}
-                    {(onEdit || onDelete) && <th>ACTIONS</th>}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((row, idx) => (
-                    <tr key={idx} style={{ animation: `slideInFromLeft 0.3s ease-out ${idx * 0.05}s both` }}>
+        <div className="table-shell">
+            <table className="data-table">
+                <thead>
+                    <tr>
                         {columns.map((col) => (
-                            <td key={col}>{row[col]}</td>
+                            <th key={col}>{formatHeader(col)}</th>
                         ))}
-                        {(onEdit || onDelete) && (
-                            <td className="actions">
-                                {onEdit && (
-                                    <button 
-                                        className="btn-small btn-edit smooth-transition" 
-                                        onClick={() => onEdit(row)}
-                                    >
-                                        Edit
-                                    </button>
-                                )}
-                                {onDelete && (
-                                    <button 
-                                        className="btn-small btn-delete smooth-transition" 
-                                        onClick={() => onDelete(row)}
-                                    >
-                                        Delete
-                                    </button>
-                                )}
-                            </td>
-                        )}
+                        {hasActions && <th>Actions</th>}
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {data.map((row, idx) => (
+                        <tr key={row.id || row._id || idx}>
+                            {columns.map((col) => (
+                                <td key={col}>{formatCellValue(row[col])}</td>
+                            ))}
+                            {hasActions && (
+                                <td className="actions">
+                                    {onEdit && (
+                                        <button
+                                            className="btn-small btn-edit"
+                                            onClick={() => onEdit(row)}
+                                        >
+                                            Edit
+                                        </button>
+                                    )}
+                                    {onDelete && (
+                                        <button
+                                            className="btn-small btn-delete"
+                                            onClick={() => onDelete(row)}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+                                </td>
+                            )}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 };
 

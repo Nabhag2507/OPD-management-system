@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import crudService from "../../services/crudService";
 import Table from "../../components/common/Table";
+import Button from "../../components/common/Button";
+import Modal from "../../components/common/Modal";
+import AddForm from "../../components/crud/AddForm";
+import EditForm from "../../components/crud/EditForm";
 
 const MyPatients = () => {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [selectedPatient, setSelectedPatient] = useState(null);
 
     useEffect(() => {
         fetchPatients();
@@ -21,14 +28,75 @@ const MyPatients = () => {
         setLoading(false);
     };
 
+    const handleAdd = async (formData) => {
+        try {
+            const response = await crudService.patients.create(formData);
+            if (response.success) {
+                setPatients((current) => [response.data, ...current]);
+                setShowAddModal(false);
+            }
+        } catch (error) {
+            alert(error.message || "Error adding patient");
+        }
+    };
+
+    const handleEdit = async (formData) => {
+        try {
+            const response = await crudService.patients.update(selectedPatient.id, formData);
+            if (response.success) {
+                setPatients((current) =>
+                    current.map((patient) =>
+                        patient.id === selectedPatient.id ? response.data : patient
+                    )
+                );
+                setShowEditModal(false);
+            }
+        } catch (error) {
+            alert(error.message || "Error updating patient");
+        }
+    };
+
     const columns = ["id", "name", "email", "phone", "age"];
+    const fields = [
+        { name: "name", label: "Patient Name", type: "text", required: true },
+        { name: "email", label: "Email", type: "email", required: true },
+        { name: "phone", label: "Phone", type: "tel", required: true },
+        { name: "age", label: "Age", type: "number", required: true },
+    ];
 
     if (loading) return <div className="dashboard"><p>Loading...</p></div>;
 
     return (
         <div className="dashboard">
             <h1 className="dashboard-title">My Patients</h1>
-            <Table columns={columns} data={patients} />
+            <Button
+                label="Add Patient"
+                onClick={() => setShowAddModal(true)}
+                className="btn-primary"
+            />
+
+            <Table
+                columns={columns}
+                data={patients}
+                onEdit={(item) => {
+                    setSelectedPatient(item);
+                    setShowEditModal(true);
+                }}
+            />
+
+            <Modal show={showAddModal} onClose={() => setShowAddModal(false)} title="Add Patient">
+                <AddForm fields={fields} onSubmit={handleAdd} />
+            </Modal>
+
+            <Modal show={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Patient">
+                {selectedPatient && (
+                    <EditForm
+                        fields={fields}
+                        initialData={selectedPatient}
+                        onSubmit={handleEdit}
+                    />
+                )}
+            </Modal>
         </div>
     );
 };

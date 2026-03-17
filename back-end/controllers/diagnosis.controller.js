@@ -72,7 +72,7 @@ exports.updateDiagnosis = async (req, res) => {
                     code: trimString(req.body.code),
                 }),
             },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedDiagnosis) {

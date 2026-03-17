@@ -2,6 +2,7 @@ const OPD = require("../models/opd.model");
 const Diagnosis = require("../models/diagnosis.model");
 const Doctor = require("../models/doctors.model");
 const Patient = require("../models/patient.model");
+const { buildScopedQuery, resolveDoctorForUser } = require("../utils/access.utils");
 const {
     ensureReferences,
     pickDefined,
@@ -13,7 +14,8 @@ const {
 // GET all OPD records
 exports.getAllOPD = async (req, res) => {
     try {
-        const opdRecords = await OPD.find()
+        const scopedQuery = await buildScopedQuery(req.user, "opds");
+        const opdRecords = await OPD.find(scopedQuery || {})
             .populate("patient")
             .populate("doctor")
             .populate("diagnosis");
@@ -32,7 +34,11 @@ exports.getAllOPD = async (req, res) => {
 exports.getOPDById = async (req, res) => {
     try {
         validateObjectId(req.params.id, "opd");
-        const opd = await OPD.findById(req.params.id)
+        const scopedQuery = await buildScopedQuery(req.user, "opds");
+        const opd = await OPD.findOne({
+            ...(scopedQuery || {}),
+            _id: req.params.id,
+        })
             .populate("patient")
             .populate("doctor")
             .populate("diagnosis");
@@ -56,9 +62,22 @@ exports.getOPDById = async (req, res) => {
 // CREATE OPD record
 exports.createOPD = async (req, res) => {
     try {
+        let doctorId = req.body.doctor;
+
+        if (req.user?.role === "doctor") {
+            const doctor = await resolveDoctorForUser(req.user);
+            if (!doctor) {
+                return res.status(400).json({
+                    err: true,
+                    message: "Doctor profile not found for logged-in user",
+                });
+            }
+            doctorId = doctor._id;
+        }
+
         const payload = {
             patient: req.body.patient,
-            doctor: req.body.doctor,
+            doctor: doctorId,
             diagnosis: req.body.diagnosis,
             visitDate: toDate(req.body.visitDate),
         };
@@ -86,9 +105,21 @@ exports.updateOPD = async (req, res) => {
     try {
         validateObjectId(req.params.id, "opd");
 
+        let doctorId = req.body.doctor;
+        if (req.user?.role === "doctor" && doctorId !== undefined) {
+            const doctor = await resolveDoctorForUser(req.user);
+            if (!doctor) {
+                return res.status(400).json({
+                    err: true,
+                    message: "Doctor profile not found for logged-in user",
+                });
+            }
+            doctorId = doctor._id;
+        }
+
         const updates = pickDefined({
             patient: req.body.patient,
-            doctor: req.body.doctor,
+            doctor: doctorId,
             diagnosis: req.body.diagnosis,
             visitDate: toDate(req.body.visitDate),
         });
@@ -102,7 +133,7 @@ exports.updateOPD = async (req, res) => {
         const updatedOPD = await OPD.findByIdAndUpdate(
             req.params.id,
             { $set: updates },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedOPD) {

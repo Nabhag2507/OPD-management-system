@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-// ========================= */
-// SEARCH COMPONENT */
-// ========================= */
+import { useEffect, useState } from "react";
 
 export const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -14,51 +10,43 @@ export const SearchBar = ({ onSearch, placeholder = "Search..." }) => {
     };
 
     return (
-        <div className="search-container" style={{ animation: 'slideInFromTop 0.4s ease-out' }}>
+        <div className="search-container">
             <input
                 type="text"
-                className="search-input glassmorphic"
+                className="search-input"
                 placeholder={placeholder}
                 value={searchTerm}
                 onChange={handleChange}
-                style={{ 
-                    padding: '12px 16px',
-                    borderRadius: '8px',
-                    width: '100%',
-                    maxWidth: '300px'
-                }}
             />
-            <span className="search-icon">🔍</span>
+            <span className="search-icon" aria-hidden="true">⌕</span>
         </div>
     );
 };
 
-// ========================= */
-// FILTER COMPONENT */
-// ========================= */
-
 export const FilterBar = ({ filters, onFilterChange }) => {
     const [activeFilters, setActiveFilters] = useState({});
 
-    const handleFilterClick = (filterKey, value) => {
+    const handleFilterChange = (filterKey, value) => {
         const updated = { ...activeFilters, [filterKey]: value };
         setActiveFilters(updated);
         onFilterChange(updated);
     };
 
     return (
-        <div className="filter-bar glassmorphic" style={{ animation: 'slideInFromLeft 0.4s ease-out' }}>
-            {filters.map((filter, idx) => (
-                <div key={idx} className="filter-group stagger-item">
+        <div className="filter-bar">
+            {filters.map((filter) => (
+                <div key={filter.key} className="filter-group">
                     <label className="filter-label">{filter.label}</label>
-                    <select 
-                        className="filter-select glassmorphic"
-                        onChange={(e) => handleFilterClick(filter.key, e.target.value)}
-                        style={{ animation: `slideInFromLeft 0.3s ease-out ${idx * 0.1}s both` }}
+                    <select
+                        className="filter-select"
+                        value={activeFilters[filter.key] || ""}
+                        onChange={(e) => handleFilterChange(filter.key, e.target.value)}
                     >
                         <option value="">All</option>
-                        {filter.options.map((opt, i) => (
-                            <option key={i} value={opt}>{opt}</option>
+                        {filter.options.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -67,117 +55,64 @@ export const FilterBar = ({ filters, onFilterChange }) => {
     );
 };
 
-// ========================= */
-// STAT CARD COMPONENT */
-// ========================= */
-
-export const StatCard = ({ title, value, icon, color = "#58a6ff", trend = null, animated = true }) => {
-    return (
-        <div 
-            className="stat-card glassmorphic" 
-            style={{
-                animation: animated ? 'slideInFromBottom 0.4s ease-out' : 'none',
-                borderLeft: `4px solid ${color}`,
-                position: 'relative',
-                overflow: 'hidden'
-            }}
-        >
-            <div className="stat-header">
-                <span className="stat-icon" style={{ fontSize: '28px' }}>{icon}</span>
-                <h4 className="stat-title">{title}</h4>
-            </div>
-            <div className="stat-value" style={{ color: color, animation: 'neonGlow 2s ease-in-out infinite' }}>
-                {value}
-            </div>
-            {trend && (
-                <div className="stat-trend" style={{ color: trend > 0 ? '#3fb950' : '#da3633' }}>
-                    {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
-                </div>
-            )}
+export const StatCard = ({ title, value, icon, color = "var(--blue-deep)", trend = null }) => (
+    <div className="stat-card" style={{ "--accent-color": color }}>
+        <div className="stat-header">
+            <span className="stat-icon" aria-hidden="true">{icon}</span>
+            <h4 className="stat-title">{title}</h4>
         </div>
-    );
-};
-
-// ========================= */
-// PROGRESS BAR COMPONENT */
-// ========================= */
-
-export const ProgressBar = ({ percentage, label, color = "#238636" }) => {
-    return (
-        <div className="progress-container">
-            <div className="progress-label">{label}</div>
-            <div className="progress-bar glassmorphic" style={{ borderColor: color }}>
-                <div 
-                    className="progress-fill"
-                    style={{
-                        width: `${percentage}%`,
-                        background: `linear-gradient(90deg, ${color}, ${color}dd)`,
-                        boxShadow: `0 0 20px ${color}80`,
-                        animation: 'neonGlow 2s ease-in-out infinite'
-                    }}
-                />
+        <div className="stat-value">{value}</div>
+        {trend !== null && (
+            <div className={`stat-trend ${trend >= 0 ? "up" : "down"}`}>
+                {trend >= 0 ? "+" : "-"}{Math.abs(trend)}%
             </div>
+        )}
+    </div>
+);
+
+export const ProgressBar = ({ percentage, label, color = "var(--success)" }) => (
+    <div className="progress-container">
+        <div className="progress-meta">
+            <span className="progress-label">{label}</span>
             <span className="progress-percentage">{percentage}%</span>
         </div>
-    );
-};
-
-// ========================= */
-// STATUS BADGE COMPONENT */
-// ========================= */
+        <div className="progress-bar">
+            <div
+                className="progress-fill"
+                style={{
+                    width: `${percentage}%`,
+                    background: `linear-gradient(90deg, ${color}, ${color})`,
+                }}
+            />
+        </div>
+    </div>
+);
 
 export const StatusBadge = ({ status, size = "medium" }) => {
-    const statusConfig = {
-        active: { color: '#3fb950', bg: 'rgba(63, 185, 80, 0.1)', icon: '✓' },
-        pending: { color: '#d29922', bg: 'rgba(210, 153, 34, 0.1)', icon: '⏳' },
-        inactive: { color: '#da3633', bg: 'rgba(218, 54, 51, 0.1)', icon: '✕' },
-        completed: { color: '#3fb950', bg: 'rgba(63, 185, 80, 0.1)', icon: '✓' }
-    };
-
-    const config = statusConfig[status] || statusConfig.pending;
-
+    const normalizedStatus = String(status || "pending").toLowerCase();
     return (
-        <span
-            className={`status-badge status-${status} glassmorphic`}
-            style={{
-                color: config.color,
-                background: config.bg,
-                borderColor: config.color,
-                animation: 'elasticBounce 1s ease-in-out infinite',
-                padding: size === 'small' ? '4px 8px' : '8px 12px',
-                fontSize: size === 'small' ? '12px' : '14px'
-            }}
-        >
-            {config.icon} {status}
+        <span className={`status-badge status-${normalizedStatus} ${size === "small" ? "small" : ""}`}>
+            {normalizedStatus}
         </span>
     );
 };
 
-// ========================= */
-// CHART PLACEHOLDER */
-// ========================= */
-
 export const SimpleChart = ({ data, title, type = "bar" }) => {
-    const maxValue = Math.max(...data.map(d => d.value));
+    const maxValue = Math.max(...data.map((item) => item.value), 1);
 
     return (
-        <div className="chart-container glassmorphic" style={{ animation: 'fadeInScale 0.5s ease-out' }}>
-            <h3 className="chart-title text-gradient">{title}</h3>
+        <div className="chart-container">
+            <h3 className="chart-title">{title}</h3>
             <div className="chart-content">
                 {type === "bar" && (
                     <div className="bar-chart">
-                        {data.map((item, idx) => (
-                            <div key={idx} className="bar-item stagger-item" style={{ animationDelay: `${idx * 0.1}s` }}>
+                        {data.map((item) => (
+                            <div key={item.label} className="bar-item">
                                 <div className="bar-label">{item.label}</div>
                                 <div className="bar-wrapper">
                                     <div
                                         className="bar"
-                                        style={{
-                                            height: `${(item.value / maxValue) * 100}%`,
-                                            animation: `slideInFromBottom 0.5s ease-out ${idx * 0.1}s both`,
-                                            background: `linear-gradient(180deg, #58a6ff, #238636)`,
-                                            boxShadow: '0 0 20px rgba(88, 166, 255, 0.3)'
-                                        }}
+                                        style={{ height: `${(item.value / maxValue) * 100}%` }}
                                     />
                                 </div>
                                 <div className="bar-value">{item.value}</div>
@@ -190,115 +125,58 @@ export const SimpleChart = ({ data, title, type = "bar" }) => {
     );
 };
 
-// ========================= */
-// ANALYTICS CARD */
-// ========================= */
-
-export const AnalyticsCard = ({ title, stats, chart }) => {
-    return (
-        <div className="analytics-card glassmorphic" style={{ animation: 'slideInFromRight 0.5s ease-out' }}>
-            <h3 className="analytics-title">{title}</h3>
-            <div className="analytics-stats">
-                {stats.map((stat, idx) => (
-                    <div 
-                        key={idx} 
-                        className="analytics-stat stagger-item"
-                        style={{ animationDelay: `${idx * 0.1}s` }}
-                    >
-                        <span className="stat-name">{stat.name}</span>
-                        <span className="stat-num" style={{ animation: 'neonGlow 2s ease-in-out infinite' }}>
-                            {stat.value}
-                        </span>
-                    </div>
-                ))}
-            </div>
-            {chart && <SimpleChart data={chart.data} title={chart.title} />}
-        </div>
-    );
-};
-
-// ========================= */
-// ACTIVITY FEED */
-// ========================= */
-
-export const ActivityFeed = ({ activities }) => {
-    return (
-        <div className="activity-feed glassmorphic" style={{ animation: 'fadeInScale 0.5s ease-out' }}>
-            <h3 className="activity-title">Recent Activity</h3>
-            <div className="activity-list">
-                {activities.map((activity, idx) => (
-                    <div 
-                        key={idx} 
-                        className="activity-item stagger-item"
-                        style={{ animationDelay: `${idx * 0.05}s` }}
-                    >
-                        <div className="activity-dot" style={{ background: activity.color }} />
-                        <div className="activity-content">
-                            <p className="activity-action">{activity.action}</p>
-                            <p className="activity-time">{activity.time}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-// ========================= */
-// LOADING SKELETON */
-// ========================= */
-
-export const SkeletonLoader = ({ count = 3, height = "100px" }) => {
-    return (
-        <div className="skeleton-container">
-            {Array.from({ length: count }).map((_, idx) => (
-                <div
-                    key={idx}
-                    className="skeleton"
-                    style={{
-                        height: height,
-                        marginBottom: '12px',
-                        borderRadius: '8px'
-                    }}
-                />
+export const AnalyticsCard = ({ title, stats, chart }) => (
+    <div className="analytics-card">
+        <h3 className="analytics-title">{title}</h3>
+        <div className="analytics-stats">
+            {stats.map((stat) => (
+                <div key={stat.name} className="analytics-stat">
+                    <span className="stat-name">{stat.name}</span>
+                    <span className="stat-num">{stat.value}</span>
+                </div>
             ))}
         </div>
-    );
-};
+        {chart && <SimpleChart data={chart.data} title={chart.title} />}
+    </div>
+);
 
-// ========================= */
-// NOTIFICATION TOAST */
-// ========================= */
+export const ActivityFeed = ({ activities }) => (
+    <div className="activity-feed">
+        <h3 className="activity-title">Recent Activity</h3>
+        <div className="activity-list">
+            {activities.map((activity, idx) => (
+                <div key={`${activity.action}-${idx}`} className="activity-item">
+                    <div className="activity-dot" style={{ background: activity.color }} />
+                    <div className="activity-content">
+                        <p className="activity-action">{activity.action}</p>
+                        <p className="activity-time">{activity.time}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
+export const SkeletonLoader = ({ count = 3, height = "100px" }) => (
+    <div className="skeleton-container">
+        {Array.from({ length: count }).map((_, idx) => (
+            <div
+                key={idx}
+                className="skeleton"
+                style={{ height }}
+            />
+        ))}
+    </div>
+);
 
 export const Toast = ({ message, type = "success", onClose }) => {
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setTimeout(onClose, 3000);
         return () => clearTimeout(timer);
     }, [onClose]);
 
-    const bgColor = {
-        success: 'rgba(63, 185, 80, 0.1)',
-        error: 'rgba(218, 54, 51, 0.1)',
-        warning: 'rgba(210, 153, 34, 0.1)',
-        info: 'rgba(88, 166, 255, 0.1)'
-    };
-
-    const borderColor = {
-        success: '#3fb950',
-        error: '#da3633',
-        warning: '#d29922',
-        info: '#58a6ff'
-    };
-
     return (
-        <div 
-            className="toast glassmorphic"
-            style={{
-                background: bgColor[type],
-                borderLeft: `4px solid ${borderColor[type]}`,
-                animation: 'slideInNotification 0.4s ease-out'
-            }}
-        >
+        <div className={`toast toast-${type}`}>
             {message}
         </div>
     );

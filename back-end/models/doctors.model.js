@@ -5,6 +5,11 @@ const doctorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    doctorEmail: {
+        type: String,
+        lowercase: true,
+        trim: true
+    },
     specialization: {
         type: String,
         required: true

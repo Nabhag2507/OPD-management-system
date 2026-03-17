@@ -75,7 +75,7 @@ exports.updateHospital = async (req, res) => {
                     beds: toNumber(req.body.beds),
                 }),
             },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedHospital) {

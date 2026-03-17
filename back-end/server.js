@@ -15,6 +15,7 @@ const diagnosisRouter = require('./routes/diagnosis.route');
 const hospitalRouter = require('./routes/hospital.route');
 const receiptRouter = require('./routes/receipt.route');
 const authRouter = require('./routes/auth.route');
+const { requireAuth } = require('./middleware/auth.middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,25 +43,25 @@ app.get("/health", (req, res) => {
 
 // Routes
 app.use("/auth", authRouter);
-app.use("/appointment", appointmentRouter);
-app.use("/appointments", appointmentRouter);
-app.use("/billing", billingRouter);
-app.use("/billings", billingRouter);
-app.use("/diagnosis", diagnosisRouter);
-app.use("/diagnoses", diagnosisRouter);
-app.use("/doctor", doctorRouter);
-app.use("/doctors", doctorRouter);
-app.use("/hospital", hospitalRouter);
-app.use("/hospitals", hospitalRouter);
-app.use("/opd", opdRouter);
-app.use("/opds", opdRouter);
-app.use("/patient", patientRouter);
-app.use("/patients", patientRouter);
-app.use("/receipt", receiptRouter);
-app.use("/receipts", receiptRouter);
-app.use("/treatement", treatmentRouter);
-app.use("/treatment", treatmentRouter);
-app.use("/treatments", treatmentRouter);
+app.use("/appointment", requireAuth, appointmentRouter);
+app.use("/appointments", requireAuth, appointmentRouter);
+app.use("/billing", requireAuth, billingRouter);
+app.use("/billings", requireAuth, billingRouter);
+app.use("/diagnosis", requireAuth, diagnosisRouter);
+app.use("/diagnoses", requireAuth, diagnosisRouter);
+app.use("/doctor", requireAuth, doctorRouter);
+app.use("/doctors", requireAuth, doctorRouter);
+app.use("/hospital", requireAuth, hospitalRouter);
+app.use("/hospitals", requireAuth, hospitalRouter);
+app.use("/opd", requireAuth, opdRouter);
+app.use("/opds", requireAuth, opdRouter);
+app.use("/patient", requireAuth, patientRouter);
+app.use("/patients", requireAuth, patientRouter);
+app.use("/receipt", requireAuth, receiptRouter);
+app.use("/receipts", requireAuth, receiptRouter);
+app.use("/treatement", requireAuth, treatmentRouter);
+app.use("/treatment", requireAuth, treatmentRouter);
+app.use("/treatments", requireAuth, treatmentRouter);
 
 app.use((req, res) => {
     res.status(404).json({
@@ -78,15 +79,24 @@ app.use((err, req, res, next) => {
 });
 
 const startServer = async () => {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
+    try {
+        await connectDB();
 
-    connectDB().catch((err) => {
+        const server = app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+
+        return server;
+    } catch (err) {
         console.error("Database connection failed:", err.message);
-    });
+        throw err;
+    }
 };
 
-startServer();
+if (require.main === module) {
+    startServer().catch(() => {
+        process.exit(1);
+    });
+}
 
-module.exports = app;
+module.exports = { app, startServer };

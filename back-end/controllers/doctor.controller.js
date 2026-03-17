@@ -1,5 +1,6 @@
 const Doctor = require("../models/doctors.model");
 const Hospital = require("../models/hospitals.model");
+const { buildScopedQuery } = require("../utils/access.utils");
 const {
     ensureReferences,
     pickDefined,
@@ -12,7 +13,8 @@ const {
 // GET all doctors
 exports.getAllDoctors = async (req, res) => {
     try {
-        const doctors = await Doctor.find().populate("hospital");
+        const scopedQuery = await buildScopedQuery(req.user, "doctors");
+        const doctors = await Doctor.find(scopedQuery || {}).populate("hospital");
 
         res.status(200).json({
             err: false,
@@ -27,7 +29,11 @@ exports.getAllDoctors = async (req, res) => {
 exports.getDoctorById = async (req, res) => {
     try {
         validateObjectId(req.params.id, "doctor");
-        const doctor = await Doctor.findById(req.params.id).populate("hospital");
+        const scopedQuery = await buildScopedQuery(req.user, "doctors");
+        const doctor = await Doctor.findOne({
+            ...(scopedQuery || {}),
+            _id: req.params.id,
+        }).populate("hospital");
 
         if (!doctor) {
             return res.status(404).json({
@@ -50,6 +56,7 @@ exports.createDoctor = async (req, res) => {
     try {
         const payload = {
             doctorName: trimString(req.body.doctorName),
+            doctorEmail: trimString(req.body.doctorEmail)?.toLowerCase(),
             specialization: trimString(req.body.specialization),
             hospital: req.body.hospital,
             experience: toNumber(req.body.experience),
@@ -78,6 +85,7 @@ exports.updateDoctor = async (req, res) => {
 
         const updates = pickDefined({
             doctorName: trimString(req.body.doctorName),
+            doctorEmail: trimString(req.body.doctorEmail)?.toLowerCase(),
             specialization: trimString(req.body.specialization),
             hospital: req.body.hospital,
             experience: toNumber(req.body.experience),
@@ -90,7 +98,7 @@ exports.updateDoctor = async (req, res) => {
         const updatedDoctor = await Doctor.findByIdAndUpdate(
             req.params.id,
             { $set: updates },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedDoctor) {

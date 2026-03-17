@@ -91,7 +91,7 @@ exports.updateBilling = async (req, res) => {
         const updatedBilling = await Billing.findByIdAndUpdate(
             req.params.id,
             { $set: updates },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedBilling) {

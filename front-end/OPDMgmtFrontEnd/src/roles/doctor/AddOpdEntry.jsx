@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import crudService from "../../services/crudService";
 import Button from "../../components/common/Button";
+import { useAuth } from "../../context/useAuth";
 
 const AddOPDPage = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         patient_id: "",
-        doctor_id: "",
         diagnosis_id: "",
         date: ""
     });
@@ -61,13 +62,7 @@ const AddOPDPage = () => {
 
                     <div className="form-group">
                         <label>Doctor ID</label>
-                        <input
-                            type="text"
-                            name="doctor_id"
-                            value={formData.doctor_id}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="text" value={user?.name || "Assigned automatically"} disabled />
                     </div>
 
                     <div className="form-group">

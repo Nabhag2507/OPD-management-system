@@ -4,20 +4,14 @@
     gap: 18px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
 .form-group label {
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
 }
 
 .form-group textarea {
-    min-height: 96px;
+    min-height: 110px;
     resize: vertical;
 }
 
@@ -33,14 +27,18 @@
     justify-content: flex-end;
 }
 
+.confirm-actions {
+    justify-content: center;
+}
+
 .form-header {
     justify-content: space-between;
     margin-bottom: 22px;
 }
 
 .form-container {
-    padding: 24px;
-    border-radius: 28px;
+    padding: 26px;
+    border-radius: 30px;
 }
 
 .opd-form {
@@ -48,21 +46,24 @@
     gap: 16px;
 }
 
+.table-shell {
+    margin-top: 18px;
+    border-radius: 28px;
+    overflow: hidden;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    border-radius: 24px;
-    overflow: hidden;
-    margin-top: 18px;
 }
 
 .data-table thead {
-    background: linear-gradient(135deg, rgba(119, 168, 255, 0.18), rgba(164, 141, 255, 0.16));
+    background: linear-gradient(135deg, rgba(124, 180, 255, 0.2), rgba(180, 141, 255, 0.18));
 }
 
 .data-table th,
 .data-table td {
-    padding: 14px 16px;
+    padding: 16px 18px;
     text-align: left;
     border-bottom: 1px solid var(--line);
 }
@@ -74,8 +75,12 @@
     color: var(--muted);
 }
 
+.data-table tbody tr {
+    background: rgba(255, 255, 255, 0.18);
+}
+
 .data-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.46);
 }
 
 .actions {
@@ -87,6 +92,7 @@
     padding: 8px 12px;
     border-radius: 999px;
     font-size: 0.82rem;
+    font-weight: 700;
     color: white;
 }
 
@@ -94,29 +100,26 @@
     background: linear-gradient(135deg, var(--blue), var(--blue-deep));
 }
 
-.btn-delete,
-.btn-danger,
-.btn.danger {
-    background: linear-gradient(135deg, #f097b6, var(--danger));
-    color: white;
+.btn-delete {
+    background: linear-gradient(135deg, #ff95ae, var(--danger));
 }
 
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(229, 235, 255, 0.38);
+    background: rgba(231, 236, 255, 0.5);
     display: grid;
     place-items: center;
     padding: 20px;
     z-index: 1000;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 }
 
 .modal-content {
     width: min(560px, 100%);
     max-height: 90vh;
     overflow: auto;
-    border-radius: 30px;
+    border-radius: 32px;
 }
 
 .modal-header {
@@ -132,11 +135,12 @@
 }
 
 .close-btn {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background: rgba(119, 168, 255, 0.12);
+    background: rgba(124, 180, 255, 0.14);
     color: var(--text);
+    font-weight: 700;
 }
 
 .delete-confirm {
@@ -169,7 +173,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(119, 168, 255, 0.6), rgba(164, 141, 255, 0.65));
+    background: linear-gradient(180deg, rgba(124, 180, 255, 0.65), rgba(180, 141, 255, 0.65));
     border-radius: 999px;
 }
 
@@ -178,10 +182,12 @@
 }
 
 @media (max-width: 720px) {
-    .data-table {
-        display: block;
+    .table-shell {
         overflow-x: auto;
-        white-space: nowrap;
+    }
+
+    .data-table {
+        min-width: 640px;
     }
 
     .form-header {

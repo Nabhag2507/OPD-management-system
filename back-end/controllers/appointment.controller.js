@@ -1,6 +1,7 @@
 const Appointment = require("../models/appointment.model");
 const Doctor = require("../models/doctors.model");
 const Patient = require("../models/patient.model");
+const { buildScopedQuery } = require("../utils/access.utils");
 const {
     ensureReferences,
     pickDefined,
@@ -13,7 +14,8 @@ const {
 // GET all appointments
 exports.getAllAppointments = async (req, res) => {
     try {
-        const appointments = await Appointment.find()
+        const scopedQuery = await buildScopedQuery(req.user, "appointments");
+        const appointments = await Appointment.find(scopedQuery || {})
             .populate("patient")
             .populate("doctor");
 
@@ -30,7 +32,11 @@ exports.getAllAppointments = async (req, res) => {
 exports.getAppointmentById = async (req, res) => {
     try {
         validateObjectId(req.params.id, "appointment");
-        const appointment = await Appointment.findById(req.params.id)
+        const scopedQuery = await buildScopedQuery(req.user, "appointments");
+        const appointment = await Appointment.findOne({
+            ...(scopedQuery || {}),
+            _id: req.params.id,
+        })
             .populate("patient")
             .populate("doctor");
 
@@ -97,7 +103,7 @@ exports.updateAppointment = async (req, res) => {
         const updatedAppointment = await Appointment.findByIdAndUpdate(
             req.params.id,
             { $set: updates },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         if (!updatedAppointment) {

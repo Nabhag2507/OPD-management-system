@@ -16,6 +16,10 @@ const patientSchema = mongoose.Schema({
     patientAge: {
         type: Number,
         required: true
+    },
+    primaryDoctor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Doctor"
     }
 }, {timestamps : true})
 
